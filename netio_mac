@@ -1,0 +1,178 @@
+#!/bin/bash
+# Author:why (E-mail:wuhaoyu2222@gmail.com)
+
+
+# 获取登入信息
+function loginInfo()
+{
+    wget 10.3.8.211 -q
+    usedTime=`grep 'time=' index.html | awk 'BEGIN{FS=";"}{print $1}' | awk 'BEGIN{FS="="}{print $2}' | awk '{print $1}'`
+    traffic=`grep 'time=' index.html | awk 'BEGIN{FS=";"}{print $2}' | awk 'BEGIN{FS="="}{print $2}' | awk '{print $1}'`
+    balance=`grep 'time=' index.html | awk 'BEGIN{FS=";"}{print $4}' | awk 'BEGIN{FS="="}{print $2}' | awk '{print $1}'`
+    echo "Used time:${usedTime:1} Min"
+    tr=$(echo "scale=3;${traffic:1}/1000"|bc)
+    echo "Used internet traffic:$tr MByte"
+    ba=$(echo "scale=2;${balance:1}/10000"|bc)
+    echo "Balance:$ba RMB"
+    rm -rf index.html
+}
+
+if [ -n "$1" ]
+	then
+        student_id=$2
+        password=$3
+		case $1 in
+			"-ix")
+                if [ -n "$2" ]
+                    then 
+				        echo "connecting......"
+				        info="--data DDDDD=$student_id&upass=$password&0MKKey="
+				        curl 'http://10.3.8.211' $info > /dev/null 2>&1
+                        curl -s 10.3.8.211 > log.txt
+                        test=`grep DDDDD log.txt | sed -n "1p" | awk 'BEGIN{FS="."}{print $3}'`
+                        if [ -n "$test" ]
+                            then
+                                echo "Login failed!"
+                            else 
+                                echo "Login seccessfully!"
+                                loginInfo
+                        fi  
+                        rm -rf log.txt
+                        exit 0
+                    else
+                        echo "Please input correct parameter!"
+                fi
+                exit 0
+				;;
+            "-iop")
+				line=$4
+				case $line in
+					"y")
+						line=CMCC-BRAS
+						;;
+					"l")
+						line=CUC-BRAS
+						;;
+					"d")
+						line=CT-BRAS
+						;;
+                    *)
+                        echo "Please input correct parameter!"
+                        exit 0
+                        ;;
+				esac
+                info="--data user=$student_id&pass=$password&line=$line"
+                curl 'http://10.3.8.217/login' $info > /dev/null 2>&1
+                echo -e "Connecting......"
+                # 判断是否连接到运行商网络，没有则连接10.3.8.211
+                test=`curl -s http://ngw.bupt.edu.cn/index | grep '您已经登录成功'`
+                if [ -n "$test" ]
+                    then 
+                        echo "Login seccessfully!"
+                    else
+                        echo "connecting......10.3.8.211"
+                        info2="--data DDDDD=$student_id&upass=$password&0MKKey="
+                        curl 'http://10.3.8.211' $info > /dev/null 2>&1
+                        test=`grep 'name="DDDDD"' log.txt` | awk '{print $1}'
+                        if [ $test='name="DDDDD"' ]
+                            then
+                                echo "Login failed!"
+                            else
+                                echo "Login seccessfully!"
+                        fi
+#                        rm -rf log.txt
+                fi
+                exit 0
+                ;;
+			"-ox")
+				echo "logouting...."
+				curl http://10.3.8.211/F.htm > /dev/null 2>&1
+				curl 10.3.8.211 > log.txt > /dev/null 2>&1 
+				test=`grep 'name="DDDDD"' log.txt` | awk '{print $1}'
+				if [ $test='name="DDDDD"' ]
+					then
+						echo "Logout seccessfully!"
+					else 
+						echo "Logout failed!"
+				fi
+				rm -rf log.txt
+				exit 0
+				;;
+			"-oop")
+				echo "logouting...."
+				curl -L http://10.3.8.217/logout > /dev/null 2>&1
+				http://ngw.bupt.edu.cn/index > log.txt > /dev/null 2>&1
+				test=`grep 您已经登录成功 log.txt`
+				if [ -n "$test" ]
+					then
+						echo "Logouting failed!"
+					else
+						echo "Logout seccessfully!"
+				fi
+				rm -rf log.txt
+				exit 0	
+				;;
+			"-oa")
+				echo "logouting...."
+				curl http://10.3.8.211/F.htm > /dev/null 2>&1
+				curl -L http://10.3.8.217/logout > /dev/null 2>&1
+				ping=`ping qq.com -c 3 | grep packets | awk '{print $4}'`
+				if [ $ping -ge 1 ]
+					then 
+						echo "Logout failed!"
+					else
+						echo "Logout successfully!"
+				fi
+                exit 0
+				;;
+            "-h")
+                echo Arguments；
+                echo -e "-ix\t\tlogin edu-network [id password]"
+                echo -e "-iop\t\tlogin operator-network [id password operator]"
+                echo -e "-ox\t\tlogout edu-network"
+                echo -e "-oop\t\tlogout operator-network"
+                echo -e "-oa\t\tlogout all"
+                echo -e "-h\t\thelp"
+                exit 0
+                ;;
+			*)
+				echo "Invalid parameter!"
+				exit 0
+				;;
+		esac
+	else
+        echo "Logouting......10.3.8.211"
+        curl http://10.3.8.211/F.htm > /dev/null 2>&1
+        curl -s 10.3.8.211 > log.txt
+        test=`grep DDDDD log.txt | sed -n "1p" | awk 'BEGIN{FS="."}{print $3}'`
+        if [ $test="DDDDD" ]
+            then
+                echo "Logout seccessfully!"
+            else 
+                echo "Logout failed!"
+        fi  
+        rm -rf log.txt
+        echo "Logouting......10.3.8.217"
+        curl -L http://10.3.8.217/logout > /dev/null 2>&1
+        test=`curl -s http://ngw.bupt.edu.cn/index | grep 您已经登录成功`
+        if [ -n "$test" ]
+            then
+                echo "Logout failed!"
+            else
+                echo "Logout seccessfully!"
+		fi
+        exit 0
+fi
+
+# 检测是否登出
+function logoutCheck()
+{
+    ping=`ping qq.com -c 3 | grep packets | awk '{print $4}'`
+    if [ $ping -ge 1 ] 
+        then 
+            echo "Logout failed!"
+        else
+            echo "Logout successfully!"
+    fi
+}
+
