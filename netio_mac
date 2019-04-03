@@ -174,5 +174,5 @@ function logoutCheck()
         else
             echo "Logout successfully!"
     fi
-}
+} 
 
