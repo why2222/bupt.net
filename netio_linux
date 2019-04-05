@@ -65,7 +65,7 @@ if [ -n "$1" ]
                         curl 'http://10.3.8.217/login' $info > /dev/null 2>&1
                         echo "Connecting......10.3.8.217"
                          # 判断是否连接到运行商网络，没有则连接10.3.8.211
-                        test=`curl -s 10.3.8.217/login | grep '您已经登录成功'`
+                        test=`curl -s http://ngw.bupt.edu.cn/index | grep '您已经登录成功'`
                         if [ -n "$test" ]
                             then 
                                 echo "Login seccessfully!"
