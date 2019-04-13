@@ -9,11 +9,11 @@ Usage:
 
 -h      help message
 
--ix     login edu-network [id password]
+-ie     login edu-network [id password]
 
 -iop    login operator-network [id password operator]
 
--ox     logout edu-network
+-oe     logout edu-network
 
 -oop    logout operator-network
 
