@@ -21,7 +21,7 @@ if [ -n "$1" ]
         student_id=$2
         password=$3
 		case $1 in
-			"-ix")
+			"-ie")
                 if [ -n "$2" ]
                     then 
 				        echo "connecting......"
@@ -88,7 +88,7 @@ if [ -n "$1" ]
                 fi
                 exit 0
                 ;;
-			"-ox")
+			"-oe")
 				echo "logouting...."
 				curl http://10.3.8.211/F.htm > /dev/null 2>&1
 				curl 10.3.8.211 > log.txt > /dev/null 2>&1 
@@ -131,9 +131,9 @@ if [ -n "$1" ]
 				;;
             "-h")
                 echo Arguments：
-                echo -e "-ix\t\tlogin edu-network [id password]"
+                echo -e "-ie\t\tlogin edu-network [id password]"
                 echo -e "-iop\t\tlogin operator-network [id password operator]"
-                echo -e "-ox\t\tlogout edu-network"
+                echo -e "-oe\t\tlogout edu-network"
                 echo -e "-oop\t\tlogout operator-network"
                 echo -e "-oa\t\tlogout all"
                 echo -e "-h\t\thelp"
