@@ -10,7 +10,8 @@ function loginInfo()
     traffic=`grep 'time=' index.html | awk 'BEGIN{FS=";"}{print $2}' | awk 'BEGIN{FS="="}{print $2}' | awk '{print $1}'`
     balance=`grep 'time=' index.html | awk 'BEGIN{FS=";"}{print $4}' | awk 'BEGIN{FS="="}{print $2}' | awk '{print $1}'`
     echo "Used time:${usedTime:1} Min"
-    echo "Used internet traffic:${traffic:1:0-3}.${traffic:0-3} MByte"
+    traffic=${traffic:1}
+    echo "Used internet traffic:`awk 'BEGIN{printf"%.3f",('$traffic'/'1024')}'` MByte"
     echo "Balance:${balance:1:0-4}.${balance:0-4:0-2} RMB"
     rm -rf index.html
 }
