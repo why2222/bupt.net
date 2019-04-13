@@ -130,7 +130,7 @@ if [ -n "$1" ]
                 exit 0
 				;;
             "-h")
-                echo Arguments；
+                echo Arguments：
                 echo -e "-ix\t\tlogin edu-network [id password]"
                 echo -e "-iop\t\tlogin operator-network [id password operator]"
                 echo -e "-ox\t\tlogout edu-network"
