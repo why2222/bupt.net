@@ -1,4 +1,7 @@
 # bupt.net
+
+* update:netio fits the lastest login page.Choose operator is disable.
+
 Connect to campus network of BUPT
 
 This is the script for connecting the BUPT wired network.
