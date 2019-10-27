@@ -1,0 +1,25 @@
+#!/bin/bash
+# Author:why (E-mail:wuhaoyu2222@gmail) 
+
+if [ ! -n "$1" ]
+    then
+        curl -l "10.3.8.211/logout" > /dev/null 2>&1
+    else
+        case $3 in 
+            "y")
+                line=CMCC-BRAS
+                ;;
+            "l")
+                line=CUC-BRAS
+                ;;
+            "d")
+                line=CT-BRAS
+                ;;
+            "*")
+                line=""
+                ;;
+        esac
+
+        info="--data user=$1&pass=$2&line=$line"
+        curl '10.3.8.211/login' $info 1>/dev/null 2>&1
+fi
